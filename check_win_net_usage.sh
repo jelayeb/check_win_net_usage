@@ -17,9 +17,10 @@
 # 20151127      Handling connection error on second connection, too
 # 20151127      Fix perfdata format
 # 20151215      Add network interface detection (-d parameter))
+# 20190510      Change Network Interface to Network Adapter 
 #############################################################################
 # Set path to the location of your Nagios plugin (check_nt)
-pluginlocation="/usr/lib/nagios/plugins"
+pluginlocation="/usr/lib64/nagios/plugins"
 #############################################################################
 # Help
 help="check_win_net_usage.sh (c) 2011-2015 Claudio Kuenzler (GPLv2)\n
@@ -70,9 +71,9 @@ fi
 # If -d (detection) is used, present list of interface names
 if [[ ${detect} -eq 1 ]]; then
   if [[ -n ${password} ]]; then
-    ${pluginlocation}/check_nt -H ${host} -p ${insertport} -s ${password} -v INSTANCES -l "Network Interface" | sed "s/OK&//"; exit 0
+    ${pluginlocation}/check_nt -H ${host} -p ${insertport} -s ${password} -v INSTANCES -l "Network Adapter" | sed "s/OK&//"; exit 0
   else
-    ${pluginlocation}/check_nt -H ${host} -p ${insertport} -v INSTANCES -l "Network Interface" | sed "s/OK&//"; exit 0
+    ${pluginlocation}/check_nt -H ${host} -p ${insertport} -v INSTANCES -l "Network Adapter" | sed "s/OK&//"; exit 0
   fi
 fi
 
@@ -82,12 +83,12 @@ if [[ -z ${interface} ]]; then echo "UNKNOWN - No interface given"; exit 3; fi
 # The checks itself (with password)
 if [[ -n ${password} ]]
 then
-bytes_in=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -s ${password} -v COUNTER -l "\\Network Interface(${interface})\\Bytes Received/sec")
-bytes_out=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -s ${password} -v COUNTER -l "\\Network Interface(${interface})\\Bytes Sent/sec")
+bytes_in=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -s ${password} -v COUNTER -l "\\Network Adapter(${interface})\\Bytes Received/sec")
+bytes_out=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -s ${password} -v COUNTER -l "\\Network Adapter(${interface})\\Bytes Sent/sec")
 else
 # Without password
-bytes_in=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -v COUNTER -l "\\Network Interface(${interface})\\Bytes Received/sec")
-bytes_out=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -v COUNTER -l "\\Network Interface(${interface})\\Bytes Sent/sec")
+bytes_in=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -v COUNTER -l "\\Network Adapter(${interface})\\Bytes Received/sec")
+bytes_out=$(${pluginlocation}/check_nt -H ${host} -p ${insertport} -v COUNTER -l "\\Network Adapter(${interface})\\Bytes Sent/sec")
 fi
 
 # Catch connection error
